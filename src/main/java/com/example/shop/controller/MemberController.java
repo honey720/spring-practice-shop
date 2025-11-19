@@ -1,7 +1,7 @@
 package com.example.shop.controller;
 
 import com.example.shop.common.ResponseEntity;
-import com.example.shop.member.Member;
+import com.example.shop.service.MemberResponse;
 import com.example.shop.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("${api.v1}/members")
 public class MemberController {
-    //TODO: 레포지토리가 아닌 서비스를 생성해서 넣을 수 있게끔 수정해야함.
     @Autowired
     private MemberService memberService;
 
@@ -22,7 +21,7 @@ public class MemberController {
             description = "public.member 테이블에 저장된 모든 회원을 조회한다."
     )
     @GetMapping
-    public ResponseEntity<List<Member>> findAll() {
+    public ResponseEntity<List<MemberResponse>> findAll() {
         return memberService.getAllMember();
     }
 
@@ -31,7 +30,7 @@ public class MemberController {
             description = "요청으로 받은 회원 정보를 public.member 테이블에 등록한다."
     )
     @PostMapping
-    public ResponseEntity<Member> create(@RequestBody MemberRequest request) {
+    public ResponseEntity<MemberResponse> create(@RequestBody MemberRequest request) {
         return memberService.createMember(request);
     }
 
@@ -40,7 +39,7 @@ public class MemberController {
             description = "요청으로 받은 회원 정보를 public.member 테이블에 수정한다."
     )
     @PutMapping("/{id}")
-    public ResponseEntity<Member> update(@RequestBody MemberRequest request, @PathVariable("id") String id) {
+    public ResponseEntity<MemberResponse> update(@RequestBody MemberRequest request, @PathVariable("id") String id) {
         return memberService.updateMember(request, id);
     }
 
