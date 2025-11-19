@@ -1,9 +1,9 @@
 package com.example.shop.controller;
 
+import com.example.shop.common.ResponseEntity;
 import com.example.shop.member.Member;
-import com.example.shop.member.MemberRepository;
+import com.example.shop.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,17 +13,17 @@ import java.util.UUID;
 @RestController
 @RequestMapping("${api.v1}/members")
 public class MemberController {
-
+    //TODO: 레포지토리가 아닌 서비스를 생성해서 넣을 수 있게끔 수정해야함.
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberService memberService;
 
     @Operation(
             summary = "회원 목록 조회",
             description = "public.member 테이블에 저장된 모든 회원을 조회한다."
     )
     @GetMapping
-    public List<Member> findAll() {
-        return memberRepository.findAll();
+    public ResponseEntity<List<Member>> findAll() {
+        return memberService.getAllMember();
     }
 
     @Operation(
@@ -31,44 +31,26 @@ public class MemberController {
             description = "요청으로 받은 회원 정보를 public.member 테이블에 등록한다."
     )
     @PostMapping
-    public Member create(@RequestBody MemberRequest request) {
-        Member member = new Member(
-                UUID.randomUUID(),
-                request.email(),
-                request.name(),
-                request.password(),
-                request.phone(),
-                request.saltKey(),
-                request.flag()
-        );
-        return memberRepository.save(member);
+    public ResponseEntity<Member> create(@RequestBody MemberRequest request) {
+        return memberService.createMember(request);
     }
 
     @Operation(
             summary = "회원 수정",
             description = "요청으로 받은 회원 정보를 public.member 테이블에 수정한다."
     )
-    @PutMapping("{id}")
-    public Member update(@RequestBody MemberRequest request, @PathVariable String id) {
-        Member member = new Member(
-                id,
-                request.email(),
-                request.name(),
-                request.password(),
-                request.phone(),
-                request.saltKey(),
-                request.flag()
-        );
-        return memberRepository.save(member);
+    @PutMapping("/{id}")
+    public ResponseEntity<Member> update(@RequestBody MemberRequest request, @PathVariable("id") String id) {
+        return memberService.updateMember(request, id);
     }
 
     @Operation(
             summary = "회원 삭제",
             description = "요청으로 받은 회원 정보를 public.member 테이블에서 삭제한다."
     )
-    @DeleteMapping("{id}")
-    public void delete(@PathVariable String id) {
-        memberRepository.deleteById(UUID.fromString(id));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        return memberService.deleteMember(id);
     }
 
 }
