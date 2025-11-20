@@ -1,4 +1,4 @@
-package com.example.shop.service;
+package com.example.shop.member;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

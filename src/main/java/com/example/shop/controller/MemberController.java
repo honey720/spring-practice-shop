@@ -1,14 +1,13 @@
 package com.example.shop.controller;
 
 import com.example.shop.common.ResponseEntity;
-import com.example.shop.service.MemberResponse;
+import com.example.shop.member.MemberResponse;
 import com.example.shop.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("${api.v1}/members")
