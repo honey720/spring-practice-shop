@@ -31,6 +31,7 @@ public class ProductService {
     public ResponseEntity<ProductInfo> ProductCreate(ProductCommand command) {
         UUID operator = command.operatorId() != null ? command.operatorId() : UUID.randomUUID();
         Product product = Product.create(
+                UUID.randomUUID(),
                 command.name(),
                 command.description(),
                 command.price(),

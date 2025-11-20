@@ -5,7 +5,8 @@ import com.example.shop.product.application.dto.ProductCommand;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record ProductRequest(String name,
+public record ProductRequest(UUID sellerId,
+                             String name,
                              String description,
                              BigDecimal price,
                              Integer stock,
@@ -14,6 +15,6 @@ public record ProductRequest(String name,
 ) {
     public ProductCommand toCommand() {
         UUID operator = operatorId != null ? UUID.fromString(operatorId) : null;
-        return new ProductCommand(name, description, price, stock, status, operator);
+        return new ProductCommand(sellerId, name, description, price, stock, status, operator);
     }
 }
