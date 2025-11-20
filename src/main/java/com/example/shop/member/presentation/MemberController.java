@@ -3,7 +3,6 @@ package com.example.shop.member.presentation;
 import com.example.shop.common.ResponseEntity;
 import com.example.shop.member.application.dto.MemberInfo;
 import com.example.shop.member.presentation.dto.MemberRequest;
-import com.example.shop.member.application.dto.MemberResponse;
 import com.example.shop.member.application.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("${api.v1}/members")
@@ -41,7 +41,7 @@ public class MemberController {
             description = "요청으로 받은 회원 정보를 public.member 테이블에 수정한다."
     )
     @PutMapping("/{id}")
-    public ResponseEntity<MemberInfo> update(@RequestBody MemberRequest request, @PathVariable("id") String id) {
+    public ResponseEntity<MemberInfo> update(@RequestBody MemberRequest request, @PathVariable("id") UUID id) {
         return memberService.updateMember(request.toCommand(), id);
     }
 
@@ -50,7 +50,7 @@ public class MemberController {
             description = "요청으로 받은 회원 정보를 public.member 테이블에서 삭제한다."
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
         return memberService.deleteMember(id);
     }
 

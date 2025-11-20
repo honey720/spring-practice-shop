@@ -37,18 +37,13 @@ public class MemberService {
                 command.flag()
         );
 
-
         Member saved = memberRepository.save(member);
 
-        return new ResponseEntity<>(
-                HttpStatus.OK.value(),
-                MemberInfo.from(saved),
-                1
-        );
+        return new ResponseEntity<>(HttpStatus.OK.value(), MemberInfo.from(saved), 1);
     }
 
-    public ResponseEntity<MemberInfo> updateMember(MemberCommand command, String id) {
-        Member member = memberRepository.findById(UUID.fromString(id)).orElseThrow();
+    public ResponseEntity<MemberInfo> updateMember(MemberCommand command, UUID id) {
+        Member member = memberRepository.findById(id).orElseThrow();
 
         member.updateInformation(
                 command.email(),
@@ -61,19 +56,11 @@ public class MemberService {
 
         Member modified = memberRepository.save(member);
 
-        return new ResponseEntity<>(
-                HttpStatus.OK.value(),
-                MemberInfo.from(modified),
-                1
-        );
+        return new ResponseEntity<>(HttpStatus.OK.value(), MemberInfo.from(modified), 1);
     }
 
-    public ResponseEntity<?> deleteMember(String id) {
-        memberRepository.deleteById(UUID.fromString(id));
-        return new ResponseEntity<>(
-                HttpStatus.OK.value(),
-                null,
-                0
-        );
+    public ResponseEntity<Void> deleteMember(UUID id) {
+        memberRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK.value(), null, 0);
     }
 }
