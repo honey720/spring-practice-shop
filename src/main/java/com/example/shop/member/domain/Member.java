@@ -1,4 +1,4 @@
-package com.example.shop.member;
+package com.example.shop.member.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -62,13 +62,13 @@ public class Member {
     @Column(name = "flag", length = 5)
     private String flag;
 
-    public Member(UUID id,
-                  String email,
-                  String name,
-                  String password,
-                  String phone,
-                  String saltKey,
-                  String flag) {
+    private Member(UUID id,
+                   String email,
+                   String name,
+                   String password,
+                   String phone,
+                   String saltKey,
+                   String flag) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -78,14 +78,21 @@ public class Member {
         this.flag = flag;
     }
 
-    public Member(String id,
-                  String email,
-                  String name,
-                  String password,
-                  String phone,
-                  String saltKey,
-                  String flag) {
-        this.id = UUID.fromString(id);
+    public static Member create(String email,
+                                String name,
+                                String password,
+                                String phone,
+                                String saltKey,
+                                String flag) {
+        return new Member(UUID.randomUUID(), email, name, password, phone, saltKey, flag);
+    }
+
+    public void updateInformation(String email,
+                                  String name,
+                                  String password,
+                                  String phone,
+                                  String saltKey,
+                                  String flag) {
         this.email = email;
         this.name = name;
         this.password = password;
@@ -94,13 +101,12 @@ public class Member {
         this.flag = flag;
     }
 
-
     public Member() {
 
     }
 
     @PrePersist
-    public void prePersist() {
+    public void prePersist() { //insert 시 작동
         if (regId == null) {
             regId = id != null ? id : UUID.randomUUID();
         }
@@ -119,20 +125,10 @@ public class Member {
     }
 
     @PreUpdate
-    public void preUpdate() {
+    public void preUpdate() { //update 시 작동
         modifyDt = LocalDateTime.now();
         if (modifyId == null) {
             modifyId = id;
         }
     }
-
-    public void updateMember(String email, String name, String password, String phone, String saltKey, String flag) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.phone = phone;
-        this.saltKey = saltKey;
-        this.flag = flag;
-    }
-
 }
