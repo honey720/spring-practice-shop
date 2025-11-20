@@ -2,20 +2,38 @@ spring:
   application:
     name: shop
   datasource:
-    url: jdbc:postgresql://localhost:5432/shop?currentSchema=public&options=-c%20TimeZone=Asia/Seoul
-    driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: 9009
+    url: ${SPRING_DATASOURCE_URL}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jackson:
-    time-zone: Asia/Seoul
+    time-zone: ${SPRING_JACKSON_TIME_ZONE}
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+    show-sql: ${SPRING_JPA_SHOW_SQL}
     properties:
       hibernate:
-        format_sql: true
+        format_sql: ${SPRING_JPA_HIBERNATE_FORMAT_SQL}
         jdbc:
-          time_zone: Asia/Seoul
+          time_zone: ${SPRING_JPA_HIBERNATE_JDBC_TIME_ZONE}
+  batch:
+    jdbc:
+      initialize-schema: always
+  task:
+    scheduling:
+      cron:
+        settlement: ${SETTLEMENT_CRON}
 api:
   v1: /api/v1
+settlement:
+  async:
+    enabled: ${SETTLEMENT_ASYNC}
+    pool-size: ${SETTLEMENT_ASYNC_POOL_SIZE}
+
+
+payment:
+  toss:
+    secret-key: ${TOSS_SECRET_KEY}
+    success-url: ${TOSS_SUCCESS_URL}
+    fail-url: ${TOSS_FAIL_URL}
