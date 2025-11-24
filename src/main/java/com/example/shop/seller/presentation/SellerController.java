@@ -44,6 +44,7 @@ public class SellerController {
                                              @RequestBody SellerRequest request) {
         return sellerService.update(id, request.toCommand());
     }
+    //수정과 삭제 시점에 id가 없으면 예외 발생하도록 AOP 등록
 
     @Operation(summary = "판매자 삭제", description = "판매자를 삭제한다.")
     @DeleteMapping("{id}")

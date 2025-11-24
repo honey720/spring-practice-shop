@@ -2,11 +2,16 @@ package com.example.shop.payment.application;
 
 import com.example.shop.common.ResponseEntity;
 import com.example.shop.payment.application.dto.PaymentCommand;
+import com.example.shop.payment.application.dto.PaymentFailureCommand;
+import com.example.shop.payment.application.dto.PaymentFailureInfo;
 import com.example.shop.payment.application.dto.PaymentInfo;
 import com.example.shop.payment.client.TossPaymentClient;
 import com.example.shop.payment.client.dto.TossPaymentResponse;
 import com.example.shop.payment.domain.Payment;
+import com.example.shop.payment.domain.PaymentFailure;
+import com.example.shop.payment.domain.PaymentFailureRepository;
 import com.example.shop.payment.domain.PaymentRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,19 +24,19 @@ import java.util.List;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-//    private final PaymentFailureRepository paymentFailureRepository;
+    private final PaymentFailureRepository paymentFailureRepository;
 //    private final SellerSettlementRepository sellerSettlementRepository;
     private final TossPaymentClient tossPaymentClient;
 //    private final OrderService orderService;
 
     public PaymentService(PaymentRepository paymentRepository,
-    //                      PaymentFailureRepository paymentFailureRepository,
+                          PaymentFailureRepository paymentFailureRepository,
     //                      SellerSettlementRepository sellerSettlementRepository,
                           TossPaymentClient tossPaymentClient
     //                      OrderService orderService
     ) {
         this.paymentRepository = paymentRepository;
-    //    this.paymentFailureRepository = paymentFailureRepository;
+        this.paymentFailureRepository = paymentFailureRepository;
     //    this.sellerSettlementRepository = sellerSettlementRepository;
         this.tossPaymentClient = tossPaymentClient;
     //    this.orderService = orderService;
@@ -72,6 +77,19 @@ public class PaymentService {
 //        );
 //        sellerSettlementRepository.save(settlement);
         return new ResponseEntity<>(HttpStatus.CREATED.value(), PaymentInfo.from(saved), 1);
+    }
+
+    public ResponseEntity<PaymentFailureInfo> recordFailure(PaymentFailureCommand command) {
+        PaymentFailure failure = PaymentFailure.from(
+                command.orderId(),
+                command.paymentKey(),
+                command.errorCode(),
+                command.errorMessage(),
+                command.amount(),
+                command.rawPayload()
+        );
+        PaymentFailure saved = paymentFailureRepository.save(failure);
+        return new ResponseEntity<>(HttpStatus.OK.value(), PaymentFailureInfo.from(saved), 1);
     }
 
 //    public ResponseEntity<PaymentFailureInfo> recordFailure(PaymentFailCommand command) {
